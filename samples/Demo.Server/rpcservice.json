@@ -1,0 +1,14 @@
+{
+  "rpcservice": [
+    {
+      "service": "UserService",
+      "message": "*",
+      "address": "127.0.0.1:8008"
+    },
+    {
+      "service": "OrderService",
+      "message": "*",
+      "address": "127.0.0.1:8008"
+    }
+  ]
+}

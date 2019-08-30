@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\NettyRpc.Core\NettyRpc.Core.csproj" />
+    <ProjectReference Include="..\..\Service\Demo.ProductService\Demo.ProductService.csproj" />
+    <ProjectReference Include="..\..\Service\Demo.UserService\Demo.UserService.csproj" />
+  </ItemGroup>
+
+</Project>

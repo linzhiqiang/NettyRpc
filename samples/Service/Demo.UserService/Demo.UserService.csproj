@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Demo.UserService</AssemblyName>
+    <RootNamespace>Demo.UserService</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\NettyRpc.Core\NettyRpc.Core.csproj" />
+  </ItemGroup>
+
+</Project>

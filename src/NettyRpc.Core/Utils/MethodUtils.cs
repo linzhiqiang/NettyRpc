@@ -49,12 +49,12 @@ namespace NettyRpc.Core.Utils
         {
             try
             {
-                Type returnType = method.ReturnType;
-                if (returnType.IsGenericParameter)
-                {
-                    throw new Exception("不支持泛型参数");
-                }
-                else if (method.IsGenericMethod)
+                //Type returnType = method.ReturnType;
+                //if (returnType.IsGenericParameter)
+                //{
+                //    throw new Exception("不支持泛型参数");
+                //}
+                if (method.IsGenericMethod)
                 {
                     // throw new Exception("不支持泛型参数");
                     var methodNew = method.MakeGenericMethod(genericMethodParameterType); //这里要求泛型参数的具体类型

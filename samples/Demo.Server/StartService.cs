@@ -18,8 +18,8 @@ namespace Demo.Server
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _serverManage.RegisterService("UserService", "*", new List<string> { "127.0.0.1:8007" });//new List<string> { "127.0.0.1:8007", "127.0.0.1:8008", "127.0.0.1:8009", "127.0.0.1:8010" }
-            _serverManage.RegisterService("ProductService", "*", new List<string> { "127.0.0.1:8008" });//new List<string> { "127.0.0.1:8007", "127.0.0.1:8008", "127.0.0.1:8009", "127.0.0.1:8010" }
-            //_serverManage.RegisterService("OrderService", "*", new List<string> { "127.0.0.1:8007", "127.0.0.1:8008" });
+            _serverManage.RegisterService("ProductService", "*", new List<string> { "127.0.0.1:8007" });//new List<string> { "127.0.0.1:8007", "127.0.0.1:8008", "127.0.0.1:8009", "127.0.0.1:8010" }
+            _serverManage.RegisterService("OrderService", "*", new List<string> { "127.0.0.1:8007" });
 
             return Task.CompletedTask;
         }

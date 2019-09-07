@@ -8,53 +8,44 @@ namespace NettyRpc.Core.Utils
 {
     public static class MethodUtils
     {
-        public static async Task<object> InvokeMethodAsync(object obj, MethodInfo methodInfo, object[] parameters)
+        public static async Task<object> InvokeMethodAsync(object obj, MethodInfo methodInfo, object[] parameters, Type[] genericMethodParameterType = null)
         {
             ParameterInfo[] parameterInfos = methodInfo.GetParameters();
             Type returnType = methodInfo.ReturnType;
 
             if (returnType == typeof(void))
             {
-                await Task.Run(() => { MethodInvoke(methodInfo, obj, parameters); });
+                MethodInvoke(methodInfo, obj, parameters, genericMethodParameterType);
                 return null;
             }
             if (returnType == typeof(Task))
             {
-                //await Task.Run(() => { MethodInvoke(methodInfo,obj, parameters); });
-                //return await Task.FromResult<object>(null);
-
-                dynamic dynTask = MethodInvoke(methodInfo, obj, parameters);
+                dynamic dynTask = MethodInvoke(methodInfo, obj, parameters, genericMethodParameterType);
                 await dynTask;
                 return null;
             }
             if (returnType.GetTypeInfo().IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
             {//Task<>
-                var task = MethodInvoke(methodInfo, obj, parameters);
-                dynamic dynTask = task;
+                var task = MethodInvoke(methodInfo, obj, parameters, genericMethodParameterType);
+                dynamic dynTask = task; //用nuget添加Microsoft.CSharp即可
                 return await dynTask;
             }
 
             if (returnType.GetTypeInfo().IsGenericType)
             {
-                return await Task.Run(() =>
-                {
-                    var result = MethodInvoke(methodInfo, obj, parameters);// methodInfo.Invoke(service, inParms);
-                    return result;
-                });
+                var result = MethodInvoke(methodInfo, obj, parameters, genericMethodParameterType);// methodInfo.Invoke(service, inParms);
+                return result;
             }
             else//非泛型
             {
-                return await Task.Run(() =>
-                {
-                    var result = MethodInvoke(methodInfo, obj, parameters);// methodInfo.Invoke(service, inParms);
-                    return result;
-                });
+                var result = MethodInvoke(methodInfo, obj, parameters, genericMethodParameterType);// methodInfo.Invoke(service, inParms);
+                return result;
             }
         }
 
 
 
-        public static object MethodInvoke(MethodInfo method, object obj, object[] parameters)
+        public static object MethodInvoke(MethodInfo method, object obj, object[] parameters, Type[] genericMethodParameterType)
         {
             try
             {
@@ -62,6 +53,12 @@ namespace NettyRpc.Core.Utils
                 if (returnType.IsGenericParameter)
                 {
                     throw new Exception("不支持泛型参数");
+                }
+                else if (method.IsGenericMethod)
+                {
+                    // throw new Exception("不支持泛型参数");
+                    var methodNew = method.MakeGenericMethod(genericMethodParameterType); //这里要求泛型参数的具体类型
+                    return methodNew.Invoke(obj, parameters);
                 }
                 else
                 {

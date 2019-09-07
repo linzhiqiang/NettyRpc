@@ -56,4 +56,37 @@ namespace NettyRpc.Core.DI
 
         }
     }
+
+    public class ClientProxyInterceptor2 : IAsyncInterceptor
+    {
+        /// <summary>
+        /// 同步方法拦截时使用
+        /// </summary>
+        /// <param name="invocation"></param>
+        public void InterceptSynchronous(IInvocation invocation)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 异步方法返回Task时使用
+        /// </summary>
+        /// <param name="invocation"></param>
+        public void InterceptAsynchronous(IInvocation invocation)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 异步方法返回Task<T>时使用
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="invocation"></param>
+        public void InterceptAsynchronous<TResult>(IInvocation invocation)
+        {
+            throw new NotImplementedException();
+        }
+
+        
+    }
 }

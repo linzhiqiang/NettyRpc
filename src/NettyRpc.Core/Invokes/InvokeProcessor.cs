@@ -41,7 +41,7 @@ namespace NettyRpc.Core.Invokes
             Type returnType = method.ReturnType;
 
             RpcServiceAttribute rpcSericeAttr = invocation.Method.DeclaringType.GetCustomAttribute<RpcServiceAttribute>(true);
-            var timeout = rpcSericeAttr != null && rpcSericeAttr.Timeout>0 ? rpcSericeAttr.Timeout : _clientOptions.Timeout; //可以从接口特性上解析，没有配置才取默认配置
+            var timeout = rpcSericeAttr != null && rpcSericeAttr.Timeout > 0 ? rpcSericeAttr.Timeout : _clientOptions.Timeout; //可以从接口特性上解析，没有配置才取默认配置
             return InvokeRemoteMethod(serviceName, invocation.Method, firstP, timeout, serializeType);
         }
 
@@ -54,17 +54,12 @@ namespace NettyRpc.Core.Invokes
             object result = null;
             if (returnType == typeof(void))
             {
-#pragma warning disable CS4014
-                InvokeRemoteNotify(serviceName, messageName, firstP, timeout, serializeType);
-#pragma warning restore CS4014
+                InvokeRemoteNotify(serviceName, messageName, firstP, timeout, serializeType).GetAwaiter().GetResult();
                 return null;
             }
             if (returnType == typeof(Task))
             {
-#pragma warning disable CS4014
-                InvokeRemoteNotify(serviceName, messageName, firstP, timeout, serializeType);
-#pragma warning restore CS4014
-                return Task.CompletedTask;
+                return InvokeRemoteNotify(serviceName, messageName, firstP, timeout, serializeType);
             }
 
             if (returnType.GetTypeInfo().IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))

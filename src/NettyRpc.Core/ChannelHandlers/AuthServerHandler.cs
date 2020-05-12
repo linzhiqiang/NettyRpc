@@ -27,7 +27,8 @@ namespace NettyRpc.Core.ChannelHandlers
                 msg.ExData = null;
                 msg.MessageType = MessageType.AuthRes;
                 context.WriteAndFlushAsync(msg);
-                context.Handler.HandlerRemoved(context);
+                context.Channel.Pipeline.Remove(this);
+                //context.Handler.HandlerRemoved(context);
             }
         }
     }

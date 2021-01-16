@@ -16,6 +16,8 @@ namespace NettyRpc.Core.ConnectManage
         //private ClientConnectManage() { }
 
         public ClientOptions _clientOptions = null;
+
+        private SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1);
         public ClientConnectManage(ClientOptions clientOptions)
         {
             _clientOptions = clientOptions;
@@ -27,7 +29,7 @@ namespace NettyRpc.Core.ConnectManage
 
         //static SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
-        public async Task<IChannel> GetChannel(string serverAddress)
+        public async Task<IChannel> GetChannelOld(string serverAddress)
         {
             IChannel result = GetChannel0(serverAddress);
             if (result != null)
@@ -54,6 +56,32 @@ namespace NettyRpc.Core.ConnectManage
             finally
             {
                 Interlocked.Exchange(ref SyncLock, 1);
+            }
+
+            return result;
+
+        }
+
+        public async Task<IChannel> GetChannel(string serverAddress)
+        {
+            IChannel result = null;
+           await SemaphoreSlim.WaitAsync();
+            try
+            {
+                result = GetChannel0(serverAddress);
+                if (result != null)
+                {
+                    return result;
+                }
+                else
+                {
+                    await CreateConnect(serverAddress);//创建连接
+                    result = GetChannel0(serverAddress);//再次获取一次连接
+                }
+            }
+            finally
+            {
+                SemaphoreSlim.Release();
             }
 
             return result;
